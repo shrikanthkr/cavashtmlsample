@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+
+</head>
+<body>
+    <script type="text/javascript">
+    function func(){
+        var data = generateData();
+        var canvas=document.getElementById("canvas");
+        context=canvas.getContext("2d");
+
+
+        var img=new Image();
+        img.src="http://images5.fanpop.com/image/photos/30800000/-Random-random-30843841-1920-1080.jpg";
+        //To calculate heoght dynamically based on text given, this has to be done before drawing anything in canvas
+        var lineCount = getLineCount(context,data.post_body,10,50,700,15);
+        console.log(lineCount);
+        console.log(img.height);
+
+        //resize image based on the need
+        var old_height = img.height;
+        var old_width = img.height;
+        var new_width = 600;
+        var new_height;
+        if(new_width > old_width || img.height > 400)
+            new_height = new_width * (old_width / old_height);
+        else
+            new_height = old_height;
+
+          //set height of canvas
+        canvas.height = (lineCount * 25) +  new_height + 100;
+
+        img.onload=function(){
+            context.save();
+            context.translate(30,0);
+            context.drawImage(img,40,0,img.width,img.height,0,0,new_width,new_height);
+            context.restore();
+            
+        }
+        
+
+
+        context.fillStyle = "#9ea7b8";
+        context.fillRect(0,0,700,canvas.height);
+        context.fillStyle="#990000";
+        context.textBaseline="top";
+        context.font = '20px Arial';
+        context.fillText(data.title,150,0);
+
+        wrapText(context,data.post_body,10,new_height,700,25) ;
+        console.log(canvas.toDataURL());
+
+    }
+
+    function generateData(){
+        var data={};
+        data.title ='!!!!!!!!!!!!Title';
+        data.post_body ='All the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.ll the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts. Thi si my last line';
+        return data;
+    }
+
+
+    function wrapText(context, text, x, y, maxWidth, lineHeight) {
+        var words = text.split(' ');
+        var line = '';
+        for(var n = 0; n < words.length; n++) {
+          var testLine = line + words[n] + ' ';
+          var metrics = context.measureText(testLine);
+          var testWidth = metrics.width;
+          if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+        }
+        else {
+            line = testLine;
+        }
+    }
+    context.fillText(line, x, y);
+} 
+
+function getLineCount(context, text, x, y, maxWidth, lineHeight) {
+    var words = text.split(' ');
+    var line = '';
+    var lineCount=0;
+    for(var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      var metrics = context.measureText(testLine);
+      var testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        line = words[n] + ' ';
+        y += lineHeight;
+        lineCount++;
+    }
+    else {
+        line = testLine;
+    }
+}
+return lineCount;
+} 
+
+
+
+
+</script>
+
+
+
+<canvas id="canvas" width ='700px' ></canvas><br />
+Enter your Text here .The Text will get drawn on the canvas<br />
+<input type="text" id="text" onKeydown="func();"></input><br />
+
+</body>
+</html>
